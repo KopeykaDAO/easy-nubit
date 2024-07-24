@@ -57,7 +57,7 @@ echo "nohup bash <(curl -s https://nubit.sh) > /root/nubit-light.log 2>&1 &" | d
 # Копирование ноды в контейнер если она уже была установлена
 if [ -d "$HOME/.nubit-light-nubit-alphatestnet-1" ]
 then
-  while ! docker exec -i tail -n 10 /root/nubit-light.log | grep -q "INFO";
+  while ! docker exec -i nubit-node tail -n 10 /root/nubit-light.log | grep -q "INFO";
   do
     sleep 10
   done
