@@ -54,13 +54,10 @@ rm Dockerfile
 # Запуск ноды
 echo "nohup bash <(curl -s https://nubit.sh) > /root/nubit-light.log 2>&1 &" | docker exec -i nubit-node /bin/bash
 
-# Ожидание...
-
-
 # Копирование ноды в контейнер если она уже была установлена
 if [ -d "~/.nubit-light-nubit-alphatestnet-1" ]
 then
-  while [ ! docker exec -i tail -n 5 /root/nubit-light.log | grep ]
+  while ! docker exec -i tail -n 10 /root/nubit-light.log | grep -q "INFO";
   do
     sleep 10
   done
