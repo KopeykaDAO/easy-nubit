@@ -51,12 +51,22 @@ docker build -t nubit-node .
 docker run -d --name nubit-node --restart unless-stopped -it -p 2121:2121 -p 26657:26657 -p 26658:26658 -p 26659:26659 nubit-node
 rm Dockerfile
 
+# Запуск ноды
+echo "nohup bash <(curl -s https://nubit.sh) > /root/nubit-light.log 2>&1 &" | docker exec -i nubit-node /bin/bash
+
+# Ожидание...
+
+
 # Копирование ноды в контейнер если она уже была установлена
 if [ -d "~/.nubit-light-nubit-alphatestnet-1" ]
 then
+  while [ ! docker exec -i tail -f /root/nubit-light.log | grep ]
+  do
+    sleep 10
+  done
+
+  docker exec -i rm -r /root/.nubit-light-nubit-alphatestnet-1
   docker cp ~/nubit-node/mnemonic.txt nubit-node:/root/nubit-node/mnemonic.txt
   docker cp ~/.nubit-light-nubit-alphatestnet-1 nubit-node:/root/.nubit-light-nubit-alphatestnet-1
+  docker restart nubit-node
 fi
-
-# Запуск ноды
-echo "nohup bash <(curl -s https://nubit.sh) > /root/nubit-light.log" | docker exec -i nubit-node /bin/bash
